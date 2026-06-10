@@ -1,20 +1,26 @@
-const button = document.querySelector("button");
+const button = document.querySelector(".add-btn");
 const input = document.querySelector("input");
 const taskList = document.querySelector(".task-list");
 const taskCount = document.querySelector(".task-count");
+const filterButtons = document.querySelectorAll(".filter-btn")
 
-const tasks = [];
-
-
-console.log(taskList.children.length);
+let tasks = [];
 
 
 
-function addTask(taskText) {
+
+
+
+
+function addTask(taskText,completed) {
     const li = document.createElement("li");
 
     const taskSpan = document.createElement("span");
     taskSpan.textContent = taskText;
+
+    if(completed){
+        taskSpan.classList.add("completed");
+    }
 
     taskSpan.addEventListener("click", function () {
         taskSpan.classList.toggle("completed");
@@ -43,7 +49,11 @@ function handleAddTask(){
         return;
     }
 
-    tasks.push(taskText);
+    tasks.push({
+        text: taskText,
+        completed: false
+    });
+
     localStorage.setItem(
         "tasks",
         JSON.stringify(tasks)
@@ -52,7 +62,7 @@ function handleAddTask(){
 
     console.log(tasks);
 
-    addTask(taskText);
+    addTask(taskText,false);
     input.value = "";
 }
 
@@ -76,21 +86,23 @@ const savedTasks = JSON.parse(
 ) || [];
 
 savedTasks.forEach(function(task){
-    addTask(task);
-})
+    addTask(task.text, task.completed);
+});
 
 
-console.log(savedTasks);
 
 
 
 updateTaskCount();
 
-const testTasks = [
-    "Study JavaScript",
-    "Walk Mocha"
-];
 
-console.log(testTasks);
 
-console.log(JSON.stringify(testTasks));
+
+filterButtons.forEach(function(button){
+
+    button.addEventListener("click", function(){
+        console.log(button.textContent);
+    });
+
+    
+});
