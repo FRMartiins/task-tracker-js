@@ -6,7 +6,7 @@ const filterButtons = document.querySelectorAll(".filter-btn")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-
+let currentFilter = "All";
 
 
 
@@ -56,6 +56,30 @@ function addTask(taskText, completed, index) {
     taskList.appendChild(li);
     updateTaskCount();
 }
+
+
+function renderTasks(){
+    taskList.innerHTML = "";
+
+    tasks.forEach(function(task,index){
+        if (currentFilter === "Active" && task.completed === true){
+            return;
+        }
+
+        if(currentFilter === "Completed" && task.completed === false){
+            return;
+        }
+        addTask(task.text, task.completed, index);
+    });
+
+
+
+
+}
+
+
+
+
 
 function handleAddTask(){
     const taskText = input.value.trim();
@@ -111,8 +135,11 @@ updateTaskCount();
 
 filterButtons.forEach(function(button){
 
-    button.addEventListener("click", function(){
-        console.log(button.textContent);
+    button.addEventListener("click", function(event){
+        currentFilter = event.target.textContent;
+        renderTasks();
+
+       
     });
 
     
