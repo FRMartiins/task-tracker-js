@@ -4,7 +4,7 @@ const taskList = document.querySelector(".task-list");
 const taskCount = document.querySelector(".task-count");
 const filterButtons = document.querySelectorAll(".filter-btn")
 
-let tasks = [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 
 
@@ -12,7 +12,7 @@ let tasks = [];
 
 
 
-function addTask(taskText,completed) {
+function addTask(taskText, completed, index) {
     const li = document.createElement("li");
 
     const taskSpan = document.createElement("span");
@@ -24,6 +24,14 @@ function addTask(taskText,completed) {
 
     taskSpan.addEventListener("click", function () {
         taskSpan.classList.toggle("completed");
+
+        tasks[index].completed = !tasks[index].completed;
+
+        localStorage.setItem(
+            "tasks",
+            JSON.stringify(tasks)
+        );
+
     });
 
     li.appendChild(taskSpan);
@@ -32,6 +40,13 @@ function addTask(taskText,completed) {
     deleteButton.textContent = "Delete";
 
     deleteButton.addEventListener("click", function () {
+        tasks.splice(index, 1);
+
+        localStorage.setItem(
+            "tasks",
+            JSON.stringify(tasks)
+        );
+
         li.remove();
         updateTaskCount();
     });
@@ -62,7 +77,7 @@ function handleAddTask(){
 
     console.log(tasks);
 
-    addTask(taskText,false);
+    addTask(taskText, false, tasks.length -1);
     input.value = "";
 }
 
@@ -81,12 +96,8 @@ input.addEventListener("keydown", function (event) {
     }
 });
 
-const savedTasks = JSON.parse(
-    localStorage.getItem("tasks")
-) || [];
-
-savedTasks.forEach(function(task){
-    addTask(task.text, task.completed);
+tasks.forEach(function(task, index){
+    addTask(task.text, task.completed, index);
 });
 
 
